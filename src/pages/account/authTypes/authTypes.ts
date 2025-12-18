@@ -1,4 +1,3 @@
-// related to register
 export type RegisterFormInputs = {
   name: string;
   email: string;
@@ -12,11 +11,7 @@ export type RegisterInputData = {
   name: keyof RegisterFormInputs;
   id: string;
 };
-export type ErrorResponseType = {
-  message: string;
-};
 
-// related to login
 export type LoginFormInputs = {
   email: string;
   password: string;

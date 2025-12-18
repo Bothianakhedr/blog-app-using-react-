@@ -28,10 +28,7 @@ export const CreatePost = () => {
               className=" w-full lg:w-[600px] shadow-xl rounded-xl object-cover "
             />
           </div>
-         
-         
-         
-         
+
           <div className="form  md:mt-3">
             <form className="space-y-2.5" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex flex-col gap-2">

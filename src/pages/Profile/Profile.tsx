@@ -1,4 +1,4 @@
-import { Posts } from "../AllPosts";
+import { Posts } from "../AllPosts/AllPosts";
 import Swal from "sweetalert2";
 import { ProfileHeader } from "./ProfileHeader";
 

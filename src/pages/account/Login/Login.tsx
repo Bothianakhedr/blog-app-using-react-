@@ -21,6 +21,7 @@ export const Login = () => {
             <h1 className="text-center mb-6 font-semibold text-xl ">
               Login To Get Access !
             </h1>
+            
             {login_Form.map(({ label, name, placeholder, type, id }) => (
               <div key={id} className="mb-2">
                 <label className="text-[11px]  font-medium " htmlFor={id}>

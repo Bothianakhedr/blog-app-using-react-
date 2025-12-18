@@ -3,33 +3,37 @@ import { URLS } from "./Url";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { SearchContext } from "../../context/SearchContext";
+import { FaSun } from "react-icons/fa6";
+import { FaMoon } from "react-icons/fa";
+
+import { ThemeContext } from "../../context/ThemContext";
 
 export const Navbar = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { token, setToken ,setUser } = useContext(AuthContext);
+  const { token, setToken, setUser } = useContext(AuthContext);
   const { term, setTerm } = useContext(SearchContext);
-
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
   const onLogout = () => {
     setToken(null);
-    setUser(null)
+    setUser(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/")
-
+    navigate("/");
   };
   return (
-    <nav className=" fixed w-full z-20 top-0 start-0 bg-indigo-400 border-default ">
+    <nav className=" fixed w-full md:px-15 z-20 top-0 start-0 bg-indigo-400 border-default   dark:bg-gray-900 
+ ">
       <div className=" container   flex flex-wrap items-center justify-between mx-auto py-2.5 px-1.5">
         <Link
           to={URLS.home}
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
-          <span className="self-center text-xl  text-white  text-heading font-bold whitespace-nowrap">
+          <span className="self-center text-xl  text-white  text-heading font-bold whitespace-nowrap dark:text-gray-100">
             Tech Blog
           </span>
         </Link>
-        <div className="flex items-center md:order-2">
+        <div className="flex gap-5 items-center md:order-2">
           <button
             type="button"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -56,44 +60,53 @@ export const Navbar = () => {
           <label htmlFor="input-group-1" className="sr-only">
             Your Email
           </label>
-          
-            <div className="relative hidden md:block">
-              <div className="absolute  text-gray-300 inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg
-                  className="w-4 h-4 text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width={24}
-                  height={24}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeWidth={2}
-                    d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
-                  />
-                </svg>
-              </div>
-              <input
-                type="text"
-                id="input-group-1"
-                className="block border text-white! w-full ps-9 pe-3 py-1.5  border-gray-300  text-heading text-sm rounded-xl focus:outline-0 focus:ring-indigo-400 focus:border focus:border-gray-300 px-2.5  "
-                placeholder="Search"
-                value={term}
-                onChange={(e) => {
-                  setTerm(e.target.value);
-                }}
-              />
+
+          <div className="relative hidden md:block">
+            <div className="absolute  text-gray-300 inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+              <svg
+                className="w-4 h-4 text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width={24}
+                height={24}
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeWidth={2}
+                  d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                />
+              </svg>
             </div>
-          
+            <input
+              type="text"
+              id="input-group-1"
+              className="block border text-white! w-full ps-9 pe-3 py-1.5  border-gray-300  text-heading text-sm rounded-xl focus:outline-0 focus:ring-indigo-400 focus:border focus:border-gray-300 px-2.5  "
+              placeholder="Search"
+              value={term}
+              onChange={(e) => {
+                setTerm(e.target.value);
+              }}
+            />
+          </div>
+          <button
+            onClick={() => setDarkMode((prev) => !prev)}
+            className={`w-8 h-8  flex items-center justify-center border-0 outline-0  cursor-pointer text-white  rounded-full transition-all duration-300
+  dark:bg-yellow-600 
+  bg-amber-300 `}
+          >
+            {darkMode ? <FaMoon /> : <FaSun />}
+          </button>
+
           <ul className="hidden md:flex items-center space-x-3 ms-8">
             {token ? (
               <li>
                 <span
                   onClick={onLogout}
-                  className="bg-yellow-300 text-white font-semibold  text-[14px] px-3 py-1.5 rounded-md cursor-pointer"
+                  className="bg-yellow-300   dark:bg-yellow-600 
+ text-white font-semibold  text-[14px] px-3 py-1.5 rounded-md cursor-pointer"
                 >
                   Logout
                 </span>

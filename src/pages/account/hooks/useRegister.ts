@@ -14,12 +14,15 @@ export const useRegister = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<RegisterFormInputs>({
     resolver: yupResolver(registerFormValidation),
     mode: "onBlur",
   });
 
+  console.log(watch("password"));
+  
   const onSubmit: SubmitHandler<RegisterFormInputs> = async (data) => {
     setIsLoading(true);
     try {

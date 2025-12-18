@@ -2,14 +2,9 @@ import { toast } from "react-toastify";
 import { axiosInstance } from "../config/axiosConfig";
 import type { AxiosError } from "axios";
 import type { ErrorResponseType, PostDataType } from "../types";
-import type {
-  CreatePostParams,
-  deletePostParams,
-  GetAllPostsParams,
-  getSinglePostParams,
-} from "./ServicesType";
-import type { PostType } from "../pages/Home/HomeTypes";
+import type { CreatePostParams } from "./ServicesType";
 import type { NavigateFunction } from "react-router-dom";
+import type { PostResponse } from "../pages/Home/HomeTypes";
 
 export const createPost = async ({
   formData,
@@ -17,15 +12,15 @@ export const createPost = async ({
   setIsLoading,
 }: CreatePostParams) => {
   try {
-    const { data } = await axiosInstance.post("/api/v1/blogs", formData);
-    if (data.status == "success") {
-      toast.success(data.message, {
-        autoClose: 1000,
-      });
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
-    }
+    const { data } = await axiosInstance.post("api/posts", formData);
+    console.log(data);
+
+    toast.success(data.message, {
+      autoClose: 500,
+    });
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
   } catch (error) {
     const errorObj = error as AxiosError<ErrorResponseType>;
     toast.error(errorObj.response?.data.message);
@@ -34,38 +29,26 @@ export const createPost = async ({
   }
 };
 
-export const getAllPosts = async ({ setPosts , pageNumber =1 }: GetAllPostsParams) => {
-  try {
-    const { data } = await axiosInstance.get(`api/v1/blogs?totalPages=${pageNumber}`);
-    setPosts(data.data);
-    console.log(data.data);
-  } catch (error) {
-    const errorObj = error as AxiosError<ErrorResponseType>;
-    toast.error(errorObj.response?.data.message);
-  }
+export const getAllPosts = async (page: number) => {
+  const { data } = await axiosInstance.get(`api/posts?limit=3&page=${page}`);
+  console.log(data);
+  return data;
+};
+export const getLatestPosts = async () => {
+  const { data } = await axiosInstance.get("api/posts/latest");
+  console.log(data);
+  return data.data;
 };
 
-export const getSinglePost = async ({ setPost, slug }: getSinglePostParams) => {
-  try {
-    const { data } = await axiosInstance.get(`/api/v1/blogs/${slug}`);
-    setPost(data.data.blog);
-  } catch (error) {
-    const errorObj = error as AxiosError<ErrorResponseType>;
-    toast.error(errorObj.response?.data.message);
-  }
+export const getSinglePost = async (id: string) => {
+  const { data } = await axiosInstance.get(`api/posts/${id}`);
+
+  return data.data;
 };
 
-export const deletePost = async ({ id, navigate }: deletePostParams) => {
-  try {
-    const { data } = await axiosInstance.delete(`/api/v1/blogs/${id}`);
-
-    if (data.status == "success") {
-      navigate("/");
-    }
-  } catch (error) {
-    const errorObj = error as AxiosError<ErrorResponseType>;
-    toast.error(errorObj.response?.data.message);
-  }
+export const deletePost = async (id: string) => {  
+  const { data } = await axiosInstance.delete(`api/posts/${id}`);
+  return data;
 };
 
 export type UpdatePostParams = {
@@ -73,7 +56,7 @@ export type UpdatePostParams = {
   navigate: NavigateFunction;
   setIsLoading: (val: boolean) => void;
   onCloseEditPostModal: () => void;
-  post: PostType;
+  post: PostResponse;
 };
 
 export const updatePost = async ({
@@ -81,7 +64,7 @@ export const updatePost = async ({
   formData,
   onCloseEditPostModal,
   navigate,
-  setIsLoading
+  setIsLoading,
 }: UpdatePostParams) => {
   try {
     const { data } = await axiosInstance.put(
@@ -100,7 +83,7 @@ export const updatePost = async ({
     console.log(data);
   } catch (error) {
     console.log(error);
-  }finally{
-    setIsLoading(false)
+  } finally {
+    setIsLoading(false);
   }
 };

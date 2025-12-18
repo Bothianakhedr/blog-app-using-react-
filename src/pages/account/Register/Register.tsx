@@ -4,9 +4,11 @@ import { Button, ErrorMessage, Input } from "../../../Components/ui";
 import { useRegister } from "../hooks/useRegister";
 import { register_Form } from "../data";
 
-
 export const Register = () => {
-  const { errors, handleSubmit, onSubmit, register ,isLoading } = useRegister();
+  const { errors, handleSubmit, onSubmit, register, isLoading } = useRegister();
+
+  
+  
 
   return (
     <div

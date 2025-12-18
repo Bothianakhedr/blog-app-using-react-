@@ -1,17 +1,24 @@
 import { RouterProvider } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 import { router } from "./router";
-import { AuthContextProvider } from "./context/AuthProvider";
 import { SearchContextProvider } from "./context/SearchContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthContextProvider } from "./context/AuthContext";
+import { ThemeContextProvider } from "./context/ThemContext";
+
+const myClient = new QueryClient();
 
 export default function App() {
   return (
-    <AuthContextProvider>
-      <SearchContextProvider>
-        <RouterProvider router={router}/>
-      <ToastContainer />
-      </SearchContextProvider>
-      
-    </AuthContextProvider>
-  )
+    <QueryClientProvider client={myClient}>
+      <AuthContextProvider>
+        <ThemeContextProvider>
+          <SearchContextProvider>
+            <RouterProvider router={router} />
+            <ToastContainer />
+          </SearchContextProvider>
+        </ThemeContextProvider>
+      </AuthContextProvider>
+    </QueryClientProvider>
+  );
 }

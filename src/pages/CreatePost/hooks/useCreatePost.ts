@@ -18,18 +18,23 @@ export const useCreatePost = () => {
     formState: { errors },
   } = useForm<PostDataType>({
     resolver: yupResolver(PostValidation),
+    mode: "onBlur",
   });
 
   const onSubmit: SubmitHandler<PostDataType> = (data) => {
+    setIsLoading(true);
     const { title, content, image } = data;
     const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", content);
-    formData.append("image", image[0]);
-    formData.append("author", user.name);
-    formData.append("published", "false");
+    const dataToSend = {
+      title,
+      content,
+      image: image[0],
+      author: user?.name,
+    };
 
-    setIsLoading(true);
+    Object.entries(dataToSend).forEach(([key, value]) =>
+      formData.append(key, value)
+    );
 
     createPost({ formData, token, navigate, setIsLoading });
   };

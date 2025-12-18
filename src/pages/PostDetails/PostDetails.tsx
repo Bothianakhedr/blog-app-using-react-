@@ -5,47 +5,36 @@ import {
   PostDetailsImage,
   PostDetailsTitle,
 } from "./index";
-import { useEffect, useState } from "react";
-import { UpdatePostModal } from "./UpdatePostModal";
+// import { UpdatePostModal } from "./UpdatePostModal";
 import { useScrollToTop } from "../../hooks/useScrollToTop";
 import { AddComments, CommentList } from "../../Components/comments";
 import { useParams } from "react-router-dom";
-import type { PostType } from "../Home/HomeTypes";
+import { useQuery } from "@tanstack/react-query";
 import { getSinglePost } from "../../services/postServices";
+import { toast } from "react-toastify";
 
 export const PostDetails = () => {
-  const [isOpenEditPostModal, setIsOpenEditPostModal] = useState(false);
-  const [post, setPost] = useState<PostType | null>(null);
-  const { slug } = useParams();
-
-  useEffect(() => {
-    getSinglePost({ slug, setPost });
-  }, []);
-
+  const { id } = useParams();
   useScrollToTop();
-  if (!post) {
-    return <h2> not posts yet !</h2>;
-  }
 
-  const { title, author, content, image, _id } = post;
-  
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["PostDetails", id],
+    queryFn: () => getSinglePost(id!),
+  });
+
+  if (isLoading) return <h2>loading</h2>;
+  if (isError) return toast.error(error.message);
+  const { title, image, content } = data;
+
   // handler
-  const onOpenEditPostModal = () => {
-    setIsOpenEditPostModal(true);
-  };
-  const onCloseEditPostModal = () => {
-    setIsOpenEditPostModal(false);
-  };
+ 
   return (
     <section className="my-20 px-8 md:px-16">
       <div className="container mx-auto px-8">
         <div className="md:grid md:grid-cols-12 gap-8 ">
-          <PostDetailsImage image={image} title={title} />
+          <PostDetailsImage image={image.url} title={title} />
           <PostDetailsTitle
-            onOpenEditPostModal={onOpenEditPostModal}
             title={title}
-            author={author}
-            id={_id}
           />
         </div>
         <PostDetailsDescription description={content} />
@@ -66,11 +55,11 @@ export const PostDetails = () => {
       <CommentList />
 
       {/* update Modal */}
-      <UpdatePostModal
-      post={post}
+      {/* <UpdatePostModal
+        post={data}
         isOpenEditPostModal={isOpenEditPostModal}
         onCloseEditPostModal={onCloseEditPostModal}
-      />
+      /> */}
     </section>
   );
 };

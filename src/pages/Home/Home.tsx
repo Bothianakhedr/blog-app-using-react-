@@ -6,15 +6,15 @@ export const Home = () => {
   return (
     <section className="mt-12">
       <HomeHeader />
-      <main className="latest-post-section my-16">
-        <div className="container mx-auto px-4 lg:px-0">
-          <div className="flex justify-between items-center ">
-            <h2 className="border-b-2 border-indigo-400 font-semibold text-3xl w-fit">
+      <main className="latest-post-section md:px-15 py-16  dark:bg-gray-900 ">
+        <div className="container mx-auto ">
+          <div className="flex justify-between items-center px-3 md:px-0">
+            <h2 className="border-b-2 border-indigo-400 font-semibold text-3xl w-fit dark:text-gray-100 dark:border-indigo-500">
               Latest Posts
             </h2>
             <Link
               to="/allPosts"
-              className="rounded-md outline-2 p-2 text-sm outline-indigo-400 hover:outline-indigo-600 transition-colors"
+              className="rounded-md outline-2 p-2 text-sm outline-indigo-400 hover:outline-indigo-600 transition-colors dark:text-white"
             >
               view all posts ➡
             </Link>
