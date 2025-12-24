@@ -1,7 +1,7 @@
 export type PostDataType = {
   title: string;
   content: string;
-  image: FileList | undefined;
+  image: FileList ;
   author?: string;
 };
 export type ErrorResponseType = {

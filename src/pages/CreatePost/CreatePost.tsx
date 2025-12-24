@@ -14,7 +14,7 @@ export const CreatePost = () => {
   } = useCreatePost();
 
   return (
-    <section className=" mt-20 ">
+    <section className="mt-20">
       <div className="container mx-auto px-4 ">
         <h2 className="font-semibold text-7xl">
           Add <span className="text-sky-600 ">Post</span>

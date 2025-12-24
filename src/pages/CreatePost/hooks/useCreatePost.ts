@@ -23,18 +23,19 @@ export const useCreatePost = () => {
 
   const onSubmit: SubmitHandler<PostDataType> = (data) => {
     setIsLoading(true);
-    const { title, content, image } = data;
-    const formData = new FormData();
-    const dataToSend = {
-      title,
-      content,
-      image: image[0],
-      author: user?.name,
-    };
 
-    Object.entries(dataToSend).forEach(([key, value]) =>
-      formData.append(key, value)
-    );
+    const formData = new FormData();
+
+    formData.append("title", data.title);
+    formData.append("content", data.content);
+
+    if (data.image && data.image[0]) {
+      formData.append("image", data.image[0]);
+    }
+
+    if (user?.name) {
+      formData.append("author", user.name);
+    }
 
     createPost({ formData, navigate, setIsLoading });
   };
