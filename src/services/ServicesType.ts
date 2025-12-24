@@ -3,7 +3,6 @@ import type { PostDataType } from "../types";
 
 export type CreatePostParams = {
   formData: PostDataType | FormData;
-  token: string | null;
   navigate: NavigateFunction;
   setIsLoading: (val: boolean) => void;
 };

@@ -1,13 +1,13 @@
-import Skeleton from "../../pages/Home/Components/Skeleton"
+import Skeleton from "../../pages/Home/Components/Skeleton";
 
-const ReusableSkelton = () => {
+const ReusableSkeleton = () => {
   return (
-     <div className=" gap-7 container mx-auto mt-9 grid md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4">
-            {Array.from({ length: 6 }, (_, index) => (
-              <Skeleton key={index} />
-            ))}
-          </div>
-  )
-}
+    <div className=" gap-7 container mx-auto mt-12 grid   lg:grid-cols-2 xl:grid-cols-3">
+      {Array.from({ length: 6 }, (_, index) => (
+        <Skeleton key={index} />
+      ))}
+    </div>
+  );
+};
 
-export default ReusableSkelton
+export default ReusableSkeleton;

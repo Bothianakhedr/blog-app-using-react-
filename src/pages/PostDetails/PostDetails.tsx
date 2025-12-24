@@ -5,7 +5,6 @@ import {
   PostDetailsImage,
   PostDetailsTitle,
 } from "./index";
-// import { UpdatePostModal } from "./UpdatePostModal";
 import { useScrollToTop } from "../../hooks/useScrollToTop";
 import { AddComments, CommentList } from "../../Components/comments";
 import { useParams } from "react-router-dom";

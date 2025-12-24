@@ -2,15 +2,23 @@ import { Link } from "react-router-dom";
 import Img from "../../../assets/image/photo-1488190211105-8b0e65b80b4e.avif";
 import { URLS } from "../../../Components/Layout/Url";
 import { formateDate } from "../helpers/formateDate";
-import type { PostCardData } from "../HomeTypes";
+import type { PostCardData, PostResponse } from "../HomeTypes";
 import { BsThreeDots } from "react-icons/bs";
-import { useState } from "react";
-import { deletePost } from "../../../services/postServices";
+import { useContext, useState } from "react";
+import { deletePost, updatePost } from "../../../services/postServices";
 import Swal from "sweetalert2";
 import { useQueryClient } from "@tanstack/react-query";
+import { AuthContext } from "../../../context/AuthContext";
+import { Button, Input, Modal, Textarea } from "../../../Components/ui";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import type { PostDataType } from "../../../types";
 
 export const PostCard = ({ post }: PostCardData) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDropDown, setIsOpenDropDown] = useState(false);
+  const [isOpenUPdateModal, setIsOpenUpdateModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { user } = useContext(AuthContext);
 
   const { title, author, _id, createdAt, content, image } = post;
   const formattedDate = formateDate(createdAt);
@@ -27,7 +35,7 @@ export const PostCard = ({ post }: PostCardData) => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        setIsOpen(false);
+        setIsOpenDropDown(false);
         deletePost(_id);
         queryClient.invalidateQueries({ queryKey: ["latestPosts"] });
 
@@ -39,10 +47,43 @@ export const PostCard = ({ post }: PostCardData) => {
       }
     });
   };
+  const onOpenUpdateModal = (post: PostResponse) => {
+    console.log(post);
+    setIsOpenDropDown(false);
+
+    setIsOpenUpdateModal(true);
+    reset({
+      title: post.title,
+      content: post.content,
+    });
+  };
+  const onCloseUpdateModal = () => {
+    setIsOpenUpdateModal(false);
+  };
+
+  const { register, handleSubmit, reset } = useForm<PostDataType>({
+    defaultValues: {
+      title: "",
+      content: "",
+      image: undefined,
+    },
+  });
+
+  const onSubmit: SubmitHandler<PostDataType> = (data) => {
+    setIsLoading(true)
+    const { title, content, image } = data;
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", content);
+    if (image?.length) formData.append("image", image[0]);
+
+    updatePost({ post, formData, onCloseUpdateModal, setIsLoading });
+    queryClient.invalidateQueries({ queryKey: ["latestPosts"] });
+    queryClient.invalidateQueries({ queryKey: ["allPosts"] });
+  };
 
   return (
-    <article  className="post-card  h-full  flex flex-col overflow-hidden rounded-xl shadow dark:shadow-none hover:shadow-lg  hover:-translate-y-1 transition-all  duration-300  dark:bg-slate-800
-">
+    <article className="post-card h-full flex flex-col overflow-hidden rounded-xl shadow dark:shadow-none hover:shadow-lg  hover:-translate-y-1 transition-all  duration-300  dark:bg-slate-800">
       <div>
         <img
           src={image?.url || Img}
@@ -65,8 +106,12 @@ export const PostCard = ({ post }: PostCardData) => {
         </div>
 
         <div className="mb-3">
-          <h3 className="font-semibold text-lg leading-snug dark:text-white">{title}</h3>
-          <p className="mt-2 text-sm text-slate-600 line-clamp-2 dark:text-slate-400">{content}</p>
+          <h3 className="font-semibold text-lg leading-snug dark:text-white">
+            {title}
+          </h3>
+          <p className="mt-2 text-sm text-slate-600 line-clamp-2 dark:text-slate-400">
+            {content}
+          </p>
         </div>
 
         <div className="mt-auto flex items-center justify-between">
@@ -77,30 +122,60 @@ export const PostCard = ({ post }: PostCardData) => {
             Read More
           </Link>
 
-          <div className="relative">
-            <BsThreeDots
-              className="text-gray-500 text-2xl hover:text-black transition-colors dark:text-white dark:hover:text-white"
-              onClick={() => setIsOpen((prev) => !prev)}
-            />
-            {isOpen ? (
-              <ul className="absolute space-y-1 -right-3.5 shadow -top-16  bg-gray-50 rounded-md px-3 py-2">
-                <li>
-                  {" "}
-                  <button className=" text-indigo-500 cursor-pointer font-semibold text-[15px] italic">
-                    Edit
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={handleDeletePost}
-                    className="text-red-500 cursor-pointer font-semibold text-[15px] italic"
-                  >
-                    delete
-                  </button>
-                </li>
-              </ul>
-            ) : null}
-          </div>
+          {user && (
+            <div className="relative">
+              <BsThreeDots
+                className="text-gray-500 cursor-pointer text-2xl hover:text-black transition-colors dark:text-white dark:hover:text-white"
+                onClick={() => setIsOpenDropDown((prev) => !prev)}
+              />
+              {isOpenDropDown ? (
+                <ul className="absolute space-y-1 -right-3.5 shadow -top-16  bg-gray-50 rounded-md px-3 py-2">
+                  <li>
+                    {" "}
+                    <button
+                      onClick={() => {
+                        onOpenUpdateModal(post);
+                      }}
+                      className=" text-indigo-700 cursor-pointer font-semibold text-[15px] "
+                    >
+                      Edit
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleDeletePost}
+                      className="text-red-700 cursor-pointer font-semibold text-[15px] "
+                    >
+                      delete
+                    </button>
+                  </li>
+                </ul>
+              ) : null}
+            </div>
+          )}
+
+          <Modal
+            isOpen={isOpenUPdateModal}
+            title="updateModal"
+            closeModal={() => {
+              setIsOpenUpdateModal(false);
+            }}
+          >
+            <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+              <Input
+                {...register("image")}
+                type="file"
+                className="p-4 rounded-md w-full border-2 border-dashed border-indigo-300 focus:border-sky-400 focus:ring-0 text-gray-500 text-sm cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-sky-100 file:text-sky-700 hover:file:bg-sky-200"
+              />
+              <Input {...register("title")} />
+              <Textarea {...register("content")} />
+              <div className="flex justify-between ">
+                <Button width="w-fit" isLoading={isLoading}>
+                  Update
+                </Button>{" "}
+              </div>
+            </form>
+          </Modal>
         </div>
       </div>
     </article>

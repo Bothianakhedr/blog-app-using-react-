@@ -10,7 +10,6 @@ export type PostResponse = {
   image: {
     url: string;
   };
-  slug?: string;
 };
 
 export type PostCardData = {

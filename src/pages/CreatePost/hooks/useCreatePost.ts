@@ -11,7 +11,7 @@ export const useCreatePost = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { user, token } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -36,7 +36,7 @@ export const useCreatePost = () => {
       formData.append(key, value)
     );
 
-    createPost({ formData, token, navigate, setIsLoading });
+    createPost({ formData, navigate, setIsLoading });
   };
 
   const handlePreviewImage = (e: React.ChangeEvent<HTMLInputElement>) => {

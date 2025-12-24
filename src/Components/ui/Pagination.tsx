@@ -14,7 +14,7 @@ export const Pagination = ({
   total,
 }: PaginationProps) => {
   return (
-    <div className="flex flex-col justify-center items-center my-9">
+    <div className="flex flex-col justify-center items-center py-9">
       <p className="text-sm text-gray-600 mx-3">
         Page{" "}
         <span className="mx-1 font-semibold text-indigo-700 text-md-1">

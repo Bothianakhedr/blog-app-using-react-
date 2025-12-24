@@ -185,7 +185,7 @@ export const Navbar = () => {
                 to={URLS.createPost}
                 className="block text-white py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0 md:dark:hover:bg-transparent"
               >
-                CreatePost
+                Create Post
               </NavLink>
             </li>
             <li>

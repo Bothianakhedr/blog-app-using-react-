@@ -3,7 +3,6 @@ import { axiosInstance } from "../config/axiosConfig";
 import type { AxiosError } from "axios";
 import type { ErrorResponseType, PostDataType } from "../types";
 import type { CreatePostParams } from "./ServicesType";
-import type { NavigateFunction } from "react-router-dom";
 import type { PostResponse } from "../pages/Home/HomeTypes";
 
 export const createPost = async ({
@@ -46,42 +45,33 @@ export const getSinglePost = async (id: string) => {
   return data.data;
 };
 
-export const deletePost = async (id: string) => {  
+export const deletePost = async (id: string) => {
   const { data } = await axiosInstance.delete(`api/posts/${id}`);
   return data;
 };
 
 export type UpdatePostParams = {
   formData: PostDataType | FormData;
-  navigate: NavigateFunction;
   setIsLoading: (val: boolean) => void;
-  onCloseEditPostModal: () => void;
+  onCloseUpdateModal: () => void;
   post: PostResponse;
 };
 
 export const updatePost = async ({
   post,
   formData,
-  onCloseEditPostModal,
-  navigate,
+  onCloseUpdateModal,
   setIsLoading,
 }: UpdatePostParams) => {
   try {
-    const { data } = await axiosInstance.put(
-      `/api/v1/blogs/${post._id}`,
-      formData
-    );
-    if (data.status === "success") {
+    const { data } = await axiosInstance.put(`api/posts/${post._id}`, formData);
       toast.success(data.message, {
-        autoClose: 1000,
+        autoClose: 500,
       });
-      onCloseEditPostModal();
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
+      onCloseUpdateModal();
+     
     }
-    console.log(data);
-  } catch (error) {
+   catch (error) {
     console.log(error);
   } finally {
     setIsLoading(false);

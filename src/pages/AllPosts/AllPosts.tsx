@@ -4,36 +4,43 @@ import { toast } from "react-toastify";
 import type { PostResponse } from "../Home/HomeTypes";
 import { useGetAllPosts } from "./hooks/useGetAllPosts";
 import ReusableSkelton from "../../Components/ui/ReusableSkelton";
-import {Pagination} from "../../Components/ui/Paginator";
-import { useState } from "react";
+import { Pagination } from "../../Components/ui/Pagination";
+import { useContext, useState } from "react";
+import { SearchContext } from "../../context/SearchContext";
 
 export const Posts = () => {
   const [page, setPage] = useState(1);
+  const {term}= useContext(SearchContext)
   useScrollToTop();
-  
+
   const { data, isError, error, isLoading } = useGetAllPosts(page);
- 
-  
+console.log(data);
+
   if (isLoading) return <ReusableSkelton />;
 
   if (isError) return toast.error(error.message);
- 
+
   function onClickPrev() {
     setPage((prev) => prev - 1);
   }
   function onClickNext() {
     setPage((prev) => prev + 1);
   }
+  const filteredPosts = data?.data?.filter((post: PostResponse) =>
+  post.title.toLowerCase().includes(term.toLowerCase()) ||
+  post.content.toLowerCase().includes(term.toLowerCase())
+);
+
 
   return (
-    <section className="mt-20">
+    <section className="pt-20 md:px-15 dark:bg-gray-900">
       <div className="container mx-auto px-4 lg:px-0 ">
-        <h2 className="border-b-2 border-indigo-300 font-semibold text-3xl  w-fit">
+        <h2 className="border-b-2 border-indigo-300 font-semibold text-3xl  w-fit dark:text-white">
           All Posts
         </h2>
 
-        <div className=" md:my-8 grid gap-7 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {data?.data?.map((post: PostResponse) => (
+        <div className=" md:py-8 grid gap-7  lg:grid-cols-2 xl:grid-cols-3">
+          {filteredPosts.map((post: PostResponse) => (
             <PostCard key={post._id} post={post} />
           ))}
         </div>
