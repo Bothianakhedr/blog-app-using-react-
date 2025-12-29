@@ -12,13 +12,12 @@ export const createPost = async ({
 }: CreatePostParams) => {
   try {
     const { data } = await axiosInstance.post("api/posts", formData);
-    console.log(data);
-
+const newPostId = data.data?._id || data._id;
     toast.success(data.message, {
       autoClose: 500,
     });
     setTimeout(() => {
-      navigate("/");
+      navigate(`/post/${newPostId}`);
     }, 1000);
   } catch (error) {
     const errorObj = error as AxiosError<ErrorResponseType>;

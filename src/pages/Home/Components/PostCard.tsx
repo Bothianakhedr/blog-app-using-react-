@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import {  Link } from "react-router-dom";
 import Img from "../../../assets/image/photo-1488190211105-8b0e65b80b4e.avif";
 import { URLS } from "../../../Components/Layout/Url";
 import { formateDate } from "../helpers/formateDate";
@@ -17,12 +17,14 @@ export const PostCard = ({ post }: PostCardData) => {
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
   const [isOpenUPdateModal, setIsOpenUpdateModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const { user } = useContext(AuthContext);
-
   const { title, author, _id, createdAt, content, image } = post;
   const formattedDate = formateDate(createdAt);
   const queryClient = useQueryClient();
+
+  const currentUserId = user?.id 
+  const authorId = author?._id 
+  const isOwner = !!(currentUserId && authorId && currentUserId === authorId);
 
   const handleDeletePost = () => {
     Swal.fire({
@@ -70,7 +72,7 @@ export const PostCard = ({ post }: PostCardData) => {
   });
 
   const onSubmit: SubmitHandler<PostDataType> = (data) => {
-    setIsLoading(true)
+    setIsLoading(true);
     const { title, content, image } = data;
     const formData = new FormData();
     formData.append("title", title);
@@ -122,7 +124,7 @@ export const PostCard = ({ post }: PostCardData) => {
             Read More
           </Link>
 
-          {user && (
+          {isOwner && (
             <div className="relative">
               <BsThreeDots
                 className="text-gray-500 cursor-pointer text-2xl hover:text-black transition-colors dark:text-white dark:hover:text-white"

@@ -1,6 +1,5 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../context/AuthContext";
 import type { PostDataType } from "../../../types";
 import { PostValidation } from "../../../validation/validation";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -11,7 +10,6 @@ export const useCreatePost = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -33,9 +31,7 @@ export const useCreatePost = () => {
       formData.append("image", data.image[0]);
     }
 
-    if (user?.name) {
-      formData.append("author", user.name);
-    }
+  
 
     createPost({ formData, navigate, setIsLoading });
   };

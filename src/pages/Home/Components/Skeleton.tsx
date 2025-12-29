@@ -3,7 +3,7 @@ const Skeleton = () => {
   return (
     <div
       role="status"
-      className="max-w-sm p-4 border border-gray-200 rounded-md shadow-xs animate-pulse md:p-6"
+      className="max-w-sm p-4 border border-gray-200 rounded-md shadow-xs animate-pulse md:p-6  dark:bg-gray-900"
     >
       <div
         role="status"

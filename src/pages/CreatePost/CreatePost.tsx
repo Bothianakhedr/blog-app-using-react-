@@ -14,13 +14,13 @@ export const CreatePost = () => {
   } = useCreatePost();
 
   return (
-    <section className="mt-20">
+    <section className="pt-20 dark:bg-gray-900 dark:text-white">
       <div className="container mx-auto px-4 ">
         <h2 className="font-semibold text-7xl">
           Add <span className="text-sky-600 ">Post</span>
         </h2>
 
-        <div className="grid lg:grid-cols-2 my-10 gap-12 ">
+        <div className="grid lg:grid-cols-2 py-10 gap-12 ">
           <div className="image md:mt-7 lg:mt-3">
             <img
               src={previewImage === "" ? Img : previewImage}

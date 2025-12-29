@@ -108,3 +108,9 @@ Benefits:
   }
 ];
 export const categories: string[] = ["JavaScript", "React", "Css"];
+
+ export const searchMap: { [key: string]: string } = {
+  "contact": "/contact",
+  "allPosts": "/posts",
+  "home": "/",
+};
